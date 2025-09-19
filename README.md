@@ -19,3 +19,5 @@ and execute the commands:
 
 1. 'npm install'
 1. 'ng serve' 
+
+Yo no hice los insert malos a la base
