@@ -4,10 +4,11 @@ import { RouterOutlet } from '@angular/router';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { Nav } from "../layout/nav/nav";
 import { AccountService } from '../core/services/account-service';
+import { Home } from "../features/home/home";
 
 @Component({
   selector: 'app-root',
-  imports: [Nav],
+  imports: [Nav, Home],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
