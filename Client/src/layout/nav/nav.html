@@ -15,21 +15,26 @@
       <a>Messages</a>
     </nav>
     <div class="flex align-middle ml-auto gap-3">
+      @if(loggedIn()){
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="flex items-center text-white text-xl gap-3 cursor-pointer">
+          <img src="/user.png" alt="User avatar" class="w-8 h-8 rounded-full">
+          <span>Calamardo</span>
+        </div>
+        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+          <li><a>Edith Progile</a></li>
+          <li><a (click)="logout()">Logout</a></li>
+        </ul>
+      </div>
+      } @else {
       <form #loginform="ngForm" (ngSubmit)="login()" class="input" class="flex items-end gap-3">
         <input
           [(ngModel)]="creds.email"
-          name="email"
-          type="text"
-          class="input"
-          placeholder="Email" />
-        <input
-          [(ngModel)]="creds.password"
-          name="password"
-          type="password"
-          class="input"
-          placeholder="Password" />
+          name="email" type="text" class="input" placeholder="Email" />
+        <input [(ngModel)]="creds.password" name="password" type="password" class="input" placeholder="Password" />
         <button type="submit" class="btn">Login</button>
       </form>
+      }
     </div>
   </div>
 </header>
