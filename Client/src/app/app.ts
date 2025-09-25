@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, Signal, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { Nav } from "../layout/nav/nav";
 import { AccountService } from '../core/services/account-service';
 import { Home } from "../features/home/home";
-import { Register } from '../features/account/register/register';
 import { User } from '../types/user';
 
 @Component({
