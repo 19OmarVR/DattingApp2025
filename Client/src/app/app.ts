@@ -3,12 +3,13 @@ import { Component, inject, OnInit, Signal, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { Nav } from "../layout/nav/nav";
 import { AccountService } from '../core/services/account-service';
-import { Home } from "../features/home/home";
 import { User } from '../types/user';
+import { Router, RouterOutlet } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [Nav, Home],
+  imports: [Nav, RouterOutlet, NgClass],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -16,6 +17,7 @@ export class App implements OnInit {
 
   private accountService = inject(AccountService);
   private http = inject(HttpClient);
+  protected router = inject(Router);
   protected readonly title = signal('Datting App 2025');
   protected members = signal<User[]>([]);
 
