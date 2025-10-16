@@ -13,6 +13,12 @@
         "@schematics/angular:service": {
           "skipTests": false,
           "path": "src/core/services"
+
+        },
+        "@schematics/angular:guard": {
+          "skipTests": false,
+          "path": "src/core/guard"
+
         }
       },
       "root": "",
