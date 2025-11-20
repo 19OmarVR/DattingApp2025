@@ -12,7 +12,7 @@ export class MembersService {
   private baseUrl = environment.apiUrl;
 
   getMember(id: string): Observable<Member> {
-    return this.http.get<Member>(this.baseUrl + "members/" + id)
+    return this.http.get<Member>(this.baseUrl + "members/" + id);
   }
 
   getMembers(): Observable<Member[]> {
