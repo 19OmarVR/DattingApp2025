@@ -5,7 +5,27 @@
   "projects": {
     "Client": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "skipTests": false,
+          "path": "src"
+        },
+        "@schematics/angular:service": {
+          "skipTests": false,
+          "path": "src/core/services"
+
+        },
+        "@schematics/angular:guard": {
+          "skipTests": false,
+          "path": "src/core/guard"
+
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": false,
+          "path": "src/core/interceptors"
+
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -86,5 +106,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
