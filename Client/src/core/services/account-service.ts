@@ -11,7 +11,7 @@ export class AccountService {
 
   private http = inject(HttpClient);
   currentUser = signal<User | null>(null);
-  baseUrl = environment.apiUrl
+  baseUrl = environment.apiUrl;
 
   register(creds: RegisterCreds): Observable<User> {
     return this.http.post<User>(this.baseUrl + "account/register", creds).pipe(
