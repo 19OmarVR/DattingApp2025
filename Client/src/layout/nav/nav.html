@@ -1,6 +1,7 @@
 <header class="p-3 w-full fixed top-0 z-50 bg-gradient-to-r from-primary to-black">
   <div class="flex align-middle items-center px-10 mx-auto gap-6">
-    <a routerLink="/" routerLinkActive="text-accent" [routerLinkActiveOptions]="{exact: true}"
+    <a routerLink="/" routerLinkActive="text-accent"
+    [routerLinkActiveOptions]="{exact: true}"
       class="flex items-center gap-2 max-h-16  border-r-white border-r-2 pr-6"> <svg xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24" fill="currentColor" class="size-6">
         <path
@@ -10,7 +11,7 @@
     </a>
     <nav class="flex gap-3 my-2 uppercase text-lg text-white">
       @if(accountService.currentUser()) {
-      <a routerLink="/members" routerLinkActive="text-accent">Matches</a>
+      <a routerLink="/members" routerLinkActive="text-accent" [routerLinkActiveOptions]="{exact: true}">Matches</a>
       <a routerLink="/lists" routerLinkActive="text-accent">Lists</a>
       <a routerLink="/messages" routerLinkActive="text-accent">Messages</a>
       }
