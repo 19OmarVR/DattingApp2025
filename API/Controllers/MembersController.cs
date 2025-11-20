@@ -4,6 +4,7 @@ using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using API.Mappers;
 
 namespace API.Controllers
 {
@@ -23,7 +24,7 @@ namespace API.Controllers
         {
             var member = await membersRepository.GetMemberAsync(id);
             if (member == null) return NotFound();
-            return member;
+            return member.ToResponse();
         }
 
         [HttpGet("{id}/photos")]
