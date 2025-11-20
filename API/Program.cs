@@ -66,7 +66,6 @@ public static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
-
         app.Run();
     }
 
@@ -102,27 +101,3 @@ public static class Program
         builder.Services.AddScoped<IMembersRepository, MembersRepository>();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

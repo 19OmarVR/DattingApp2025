@@ -12,7 +12,6 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes, withViewTransitions()),
     provideHttpClient(withInterceptors([errorInterceptor])),
-    provideHttpClient(),
     provideAppInitializer(async () => {
       const initService = inject(InitService);
 
