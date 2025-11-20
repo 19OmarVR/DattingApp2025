@@ -16,5 +16,3 @@ export type RegisterCreds = {
   displayName: string;
   password: string;
 }
-
-
