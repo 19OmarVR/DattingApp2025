@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MembersService } from '../../../core/services/members-service';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { Member } from '../../../types/member';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-member-detail',
@@ -14,10 +14,21 @@ import { Observable } from 'rxjs';
 export class MemberDetail implements OnInit {
   private membersService = inject(MembersService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   protected member$?: Observable<Member>;
+  protected title = signal<string | undefined>("profile");
 
   ngOnInit(): void {
     this.member$ = this.loadMember();
+    this.title.set(this.route.firstChild?.snapshot?.title);
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe({
+      next: () => {
+        this.title.set(this.route.firstChild?.snapshot?.title);
+      }
+    });
   }
 
   loadMember(): Observable<Member> | undefined {
