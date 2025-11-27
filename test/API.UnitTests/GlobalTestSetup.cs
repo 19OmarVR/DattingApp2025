@@ -24,5 +24,6 @@ public class GlobalTestSetup
     public async Task TearDown()
     {
         await AppDbContext.DisposeAsync();
+        await Seed.SeedUsers(AppDbContext);
     }
 }
