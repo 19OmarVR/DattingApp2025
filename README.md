@@ -6,6 +6,7 @@ DattingApp for 2025
 For running the C# API project you need to navigate to:
 './API and execute tje commands:
 
+1. 'dotnet dev-certs https --trust'
 1. 'dotnet restore'
 1. 'dotnet run'
 

@@ -11,14 +11,12 @@ namespace API.Controllers
     [Authorize]
     public class MembersController(IMembersRepository membersRepository) : BaseApiController
     {
-        //[AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
         {
             return Ok(await membersRepository.GetMembersAsync());
         }
 
-        //[AllowAnonymous]
         [HttpGet("{id}")] //localhost:5001/api/members/omar_id
         public async Task<ActionResult<Member>> GetMember(string id)
         {
