@@ -1,0 +1,31 @@
+meta {
+  name: Member - Not Found
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/members/123456
+  body: none
+  auth: bearer
+}
+
+headers {
+  ~Authorization: {{authToken}}
+}
+
+auth:bearer {
+  token: {{authToken}}
+}
+
+tests {
+  test("Should return not Found", function(){
+    expect(res.getStatus()).to.equal(404);
+  });
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
