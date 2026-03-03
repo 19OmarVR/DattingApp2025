@@ -10,6 +10,9 @@ For running the C# API project you need to navigate to:
 1. 'dotnet restore'
 1. 'dotnet run'
 
+    cd client/ssl
+    mkcert localhost 127.0.0.1 ::1
+
 # Angular
 For running the c# APY project you need to navigate to '/Client' 
 

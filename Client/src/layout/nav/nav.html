@@ -28,7 +28,7 @@
           </svg>
           <span>{{selectedTheme()}}</span>
         </button>
-        <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+        <ul tabindex="-1" class="dropdown-content z-50 menu bg-base-100 rounded-box w-52 p-2 shadow-sm">
           @for (theme of themes; track $index) {
           <li (click)="handleSelectedTheme(theme)">
             <a>{{theme}}</a>
@@ -43,8 +43,8 @@
           <img [src]="user?.imageUrl || './user.png'" alt="user avatar" class="w-8 h-8 rounded-full">
           <span>{{user.displayName}}</span>
         </div>
-        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-          <li><a>Edit Profile</a></li>
+        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow-sm">
+          <li><a routerLink="/members/{{user.id}}">Edit profile</a></li>
           <li><a (click)="logout()">Logout</a></li>
         </ul>
       </div>

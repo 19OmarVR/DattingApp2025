@@ -24,8 +24,8 @@ export class MemberPhotos {
   }
 
   get photoMocks() {
-    return Array.from({ length: 20 }, (_, i) => ({
-      url: "./user.png"
+    return Array.from({ length: 0 }, (_, i) => ({
+      url: "./user.jpg"
     }));
   }
 }
