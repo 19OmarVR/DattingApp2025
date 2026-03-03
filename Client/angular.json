@@ -17,7 +17,7 @@
         },
         "@schematics/angular:guard": {
           "skipTests": false,
-          "path": "src/core/guard"
+          "path": "src/core/guards"
 
         },
         "@schematics/angular:interceptor": {
