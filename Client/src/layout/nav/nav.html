@@ -16,6 +16,11 @@
       }
       <a routerLink="/errors" routerLinkActive="text-accent">Errors</a>
     </nav>
+
+    @if (busyService.busyRequestCount() > 0) {
+    <span class="loading loading-spinner text-accent"></span>
+    }
+
     <div class="flex align-middle ml-auto gap-3">
 
       <div class="dropdown mr-5 dropdown-end">
@@ -53,8 +58,9 @@
         <input [(ngModel)]="creds.email" name="email" type="text" class="input" placeholder="Email" />
         <input [(ngModel)]="creds.password" name="password" type="password" class="input" placeholder="Password" />
         <button type="submit" class="btn">Login</button>
-      </form>
+        </form>
       }
+
     </div>
   </div>
 </header>
