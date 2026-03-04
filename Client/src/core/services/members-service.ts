@@ -10,7 +10,7 @@ import { Observable, tap } from 'rxjs';
 export class MembersService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
-  public editMode = signal(false);
+  public editMode = signal(true);
   member = signal<Member | null>(null);
 
   getMember(id: string): Observable<Member> {
@@ -31,5 +31,10 @@ export class MembersService {
 
   updateMember(member: EditableMember) {
     return this.http.put(this.baseUrl + "members", member);
+  }
+  uploadPhoto(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<Photo>(this.baseUrl + 'members/photo', formData);
   }
 }
