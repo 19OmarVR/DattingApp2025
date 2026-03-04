@@ -13,7 +13,7 @@ post {
 body:json {
   {
   	"email": "arenita@test.com",
-  	"password": "Pa$$w0rd"
+  	"password": "password"
   }
 }
 
@@ -29,7 +29,14 @@ script:post-response {
       bru.setGlobalEnvVar('token', user.token);
   }
 }
-
+tests {
+  test("Should be able to login", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+  
+  const data = res.body;
+  bru.setEnvVar('arenitaToken', data.token);
+}
 settings {
   encodeUrl: true
 }
