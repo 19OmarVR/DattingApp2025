@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MembersService } from '../../core/services/members-service';
-import { Observable } from 'rxjs';
 import { Photo } from '../../types/member';
 import { ActivatedRoute } from '@angular/router';
 import { ImageUpload } from '../../shared/image-upload/image-upload';
