@@ -9,7 +9,7 @@ import { IconButton } from '../../shared/icon-button/icon-button';
 
 @Component({
   selector: 'app-member-photos',
-  imports: [ ImageUpload, IconButton],
+  imports: [ ImageUpload, IconButton ],
   templateUrl: './member-photos.html',
   styleUrl: './member-photos.css'
 })
