@@ -6,16 +6,17 @@ import { ImageUpload } from '../../shared/image-upload/image-upload';
 import { AccountService } from '../../core/services/account-service';
 import { User } from '../../types/user';
 import { IconButton } from '../../shared/icon-button/icon-button';
+import { DeleteButton } from '../../shared/delete-button/delete-button';
 
 @Component({
   selector: 'app-member-photos',
-  imports: [ ImageUpload, IconButton ],
+  imports: [ ImageUpload, IconButton , DeleteButton],
   templateUrl: './member-photos.html',
   styleUrl: './member-photos.css'
 })
 export class MemberPhotos implements OnInit {
   private route = inject(ActivatedRoute);
-  private accountService = inject(AccountService);
+  protected accountService = inject(AccountService);
   protected membersService = inject(MembersService);
   protected photos = signal<Photo[]>([]);
   protected loading = signal(false);
@@ -58,6 +59,13 @@ export class MemberPhotos implements OnInit {
           ...member,
           imageUrl: photo.url
         }) as Member);
+      }
+    });
+  }
+  deletePhoto(photoId: number) {
+    this.membersService.deletePhoto(photoId).subscribe({
+      next: () => {
+        this.photos.update(photos => photos.filter(p => p.id !== photoId))
       }
     });
   }
