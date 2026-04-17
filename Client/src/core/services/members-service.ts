@@ -1,4 +1,3 @@
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
@@ -29,6 +28,7 @@ export class MembersService {
     params = params.append('pageSize', memberParams.pageSize);
     params = params.append('minAge', memberParams.minAge);
     params = params.append('maxAge', memberParams.maxAge);
+    params = params.append('orderBy', memberParams.orderBy);
     if (memberParams.gender) params = params.append('gender', memberParams.gender);
 
     return this.http.get<PaginationResult<Member>>(this.baseUrl + "members", { params });
