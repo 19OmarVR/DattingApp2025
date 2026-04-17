@@ -11,7 +11,7 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
     public async Task<ActionResult> ToggleLike(string targetMemberId)
     {
         var sourceMemberId = User.GetMemberId();
-        
+
         if (sourceMemberId == targetMemberId) return BadRequest("You cannot like yourself!");
 
         var existingLike = await likesRepository.GetMemberLike(sourceMemberId, targetMemberId);
@@ -41,9 +41,10 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Member>>> GetMemberLikes(string predicate)
+    public async Task<ActionResult<PaginationResult<Member>>> GetMemberLikes([FromQuery] LikesRequest request)
     {
-        var members = await likesRepository.GetMemberLikes(predicate, User.GetMemberId());
+        request.MemberId = User.GetMemberId();
+        var members = await likesRepository.GetMemberLikes(request);
         return Ok(members);
     }
 }

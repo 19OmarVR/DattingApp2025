@@ -255,12 +255,38 @@
         "operationId": "Likes_GetMemberLikes",
         "parameters": [
           {
-            "name": "predicate",
+            "name": "MemberId",
             "in": "query",
             "schema": {
               "type": "string"
             },
             "x-position": 1
+          },
+          {
+            "name": "Predicate",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
           }
         ],
         "responses": {
@@ -269,9 +295,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Member"
+                  "$ref": "#/components/schemas/PaginationResultOfMember"
                   }
                 }
               }
@@ -305,7 +329,16 @@
             },
             "x-position": 2
           },
-           {
+          {
+            "name": "MinAge",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
             "name": "MaxAge",
             "in": "query",
             "schema": {
@@ -329,7 +362,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 5
+            "x-position": 6
           },
           {
             "name": "PageSize",
@@ -531,6 +564,43 @@
           },
           "password": {
             "type": "string"
+          }
+        }
+      },
+      "PaginationResultOfMember": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Member"
+            }
+          }
+        }
+      },
+      "PaginationMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
