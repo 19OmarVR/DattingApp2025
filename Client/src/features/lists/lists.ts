@@ -1,16 +1,17 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { LikesService } from '../../core/services/likes-service';
 import { Member } from '../../types/member';
+import { MemberCard } from "../members/member-card/member-card";
 
 @Component({
   selector: 'app-lists',
-  imports: [],
+  imports: [MemberCard],
   templateUrl: './lists.html',
   styleUrl: './lists.css'
 })
 export class Lists implements OnInit {
   private likesService = inject(LikesService);
-  private members = signal<Member[]>([]);
+  protected members = signal<Member[]>([]);
   protected predicate = 'liked';
 
   tabs = [
