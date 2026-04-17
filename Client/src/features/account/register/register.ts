@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AccountService } from '../../../core/services/account-service';
 import { RegisterCreds } from '../../../types/user';
 import { JsonPipe } from '@angular/common';
@@ -11,28 +11,19 @@ import { TextInput } from "../../../shared/text-input/text-input";
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
-export class Register implements OnInit {
+export class Register {
   private accountService = inject(AccountService);
+  private fb = inject(FormBuilder);
   protected creds = {} as RegisterCreds;
-  protected registerForm: FormGroup = new FormGroup({});
+  protected registerForm: FormGroup;
   cancelRegister = output<boolean>();
 
-  private readonly EMAIL_REGEX = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-
-  ngOnInit(): void {
-    this.initializeForm();
-  }
-
-  initializeForm() {
-    this.registerForm = new FormGroup({
-      email: new FormControl('',
-        [Validators.required, Validators.pattern(this.EMAIL_REGEX)]),
-      displayName: new FormControl('',
-        [Validators.required]),
-      password: new FormControl('',
-        [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
-      confirmPassword: new FormControl('',
-        [Validators.required, this.matchValues('password')])
+  constructor() {
+    this.registerForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      displayName: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
+      confirmPassword: ['', [Validators.required, this.matchValues('password')]]
     });
 
     this.registerForm.controls['password'].valueChanges.subscribe(() => {
