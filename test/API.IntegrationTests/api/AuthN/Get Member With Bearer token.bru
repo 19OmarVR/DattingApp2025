@@ -1,0 +1,19 @@
+meta {
+  name: Get Member With Bearer token
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/members/arenita-id
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+settings {
+  encodeUrl: true
+}
