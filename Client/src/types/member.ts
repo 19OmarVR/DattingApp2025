@@ -17,3 +17,19 @@ export interface Photo {
   publicId?: string;
   memberId: string;
 }
+
+export type EditableMember = {
+  displayName: string;
+  description?: string;
+  city: string;
+  country: string;
+}
+
+export class MemberParams {
+  gender?: string;
+  minAge = 18;
+  maxAge = 120;
+  pageNumber = 1;
+  pageSize = 10;
+  orderBy = 'age';
+}
