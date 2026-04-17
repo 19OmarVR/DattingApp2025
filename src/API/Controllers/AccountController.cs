@@ -4,9 +4,9 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using API.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using API.Mappers;
 
 namespace API.Controllers;
 
@@ -15,7 +15,7 @@ namespace API.Controllers;
 /// </summary>
 public class AccountController(AppDbContext context, ITokenService tokenService) : BaseApiController
 {
-     /// <summary>
+    /// <summary>
     /// Creates an User.
     /// </summary>
     /// <param name="request"></param>
@@ -38,19 +38,22 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
     [HttpPost("register")]
     public async Task<ActionResult<UserResponse>> Register(RegisterRequest request)
     {
-        //Si existe el email en la base de datos
         if (await EmailExists(request.Email)) return BadRequest("Email is already in use");
-
         using var hmac = new HMACSHA512();
-
         var user = new AppUser
         {
             DisplayName = request.DisplayName,
             Email = request.Email,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password)),
-            PasswordSalt = hmac.Key
+            PasswordSalt = hmac.Key,
+            Member = new Member
+            {
+                DisplayName = request.DisplayName,
+                Gender = request.Gender,
+                City = request.City,
+                Country = request.Country
+            }
         };
-
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
@@ -70,13 +73,9 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
     public async Task<ActionResult<UserResponse>> Login(LoginRequest request)
     {
         var user = await context.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
-
         if (user == null) return Unauthorized("Invalid email or password");
-
         using var hmac = new HMACSHA512(user.PasswordSalt);
-
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.Password));
-
         for (var i = 0; i < computedHash.Length; i++)
         {
             if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid email or password");
@@ -84,7 +83,7 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
 
         return user.ToDto(tokenService);
     }
-    
+
     private async Task<bool> EmailExists(string email)
     {
         return await context.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
