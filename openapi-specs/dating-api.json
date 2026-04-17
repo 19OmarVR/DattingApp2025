@@ -227,6 +227,14 @@
             "x-position": 4
           },
           {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 5
+          },
+          {
             "name": "PageNumber",
             "in": "query",
             "schema": {
