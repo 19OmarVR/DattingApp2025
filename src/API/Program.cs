@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Serialization;
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Middlewares;
 using API.Services;
@@ -75,6 +76,7 @@ public static class Program
             var logger = services.GetRequiredService<ILogger>();
             logger.LogError(ex, "Migration process failed!");
         }
+
         // Configure the HTTP request pipeline.
         app.UseMiddleware<ExceptionMiddleware>();
         if (app.Environment.IsDevelopment())
@@ -98,6 +100,7 @@ public static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+
         app.Run();
     }
 
@@ -129,7 +132,10 @@ public static class Program
 
     private static void AddScopedServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<ITokenService, TokenServices>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IMembersRepository, MembersRepository>();
+        builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddScoped<UserActivityLogger>();
+        builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
     }
 }
