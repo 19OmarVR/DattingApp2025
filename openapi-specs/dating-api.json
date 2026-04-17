@@ -200,6 +200,24 @@
         "operationId": "Members_GetMembers",
         "parameters": [
           {
+            "name": "Gender",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "CurrentMemberId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
             "name": "PageNumber",
             "in": "query",
             "schema": {

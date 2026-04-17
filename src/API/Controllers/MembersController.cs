@@ -14,9 +14,9 @@ public class MembersController(IMembersRepository membersRepository,
     IPhotoService photoService) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery] PaginationRequest paginationRequest)
+    public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery] MemberRequest request)
     {
-        return Ok(await membersRepository.GetMembersAsync(paginationRequest));
+        return Ok(await membersRepository.GetMembersAsync(request));
     }
 
     [HttpGet("{id}")] // https://localhost:5001/api/members/bob-id
