@@ -1,4 +1,3 @@
-
 <div class="flex items-center w-full gap-3 py-3">
   <span>Items per page: </span>
   <select class="select w-24" (change)="onPageChange(undefined, $event.target)">
@@ -19,7 +18,7 @@
     </button>
     <button
       class="btn btn-circle btn-ghost"
-      [disabled]="pageNumber() === 1" (click)="onPageChange(pageNumber() + 1)">
+      [disabled]="pageNumber() >= totalPages()" (click)="onPageChange(pageNumber() + 1)">
       &rarr;
     </button>
   </div>

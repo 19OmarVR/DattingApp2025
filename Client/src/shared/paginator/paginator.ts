@@ -9,9 +9,13 @@ import { Component, computed, input, model, output } from '@angular/core';
 export class Paginator {
   pageNumber = model(1);
   pageSize = model(10);
+
   totalCount = input(0);
+  totalPages = input(0);
   pageSizeOptions = input([5, 10, 20, 50]);
+
   pageChange = output<{ pageNumber: number, pageSize: number }>();
+
   lastItemIndex = computed(() => {
     return Math.min(this.pageNumber() * this.pageSize(), this.totalCount());
   })
