@@ -1,0 +1,25 @@
+meta {
+  name: Get Users orderedby Created
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/members?orderBy=created&pageNumber=1
+  body: none
+  auth: inherit
+}
+
+params:query {
+  orderBy: created
+  pageNumber: 1
+  ~gender: female
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+settings {
+  encodeUrl: true
+}

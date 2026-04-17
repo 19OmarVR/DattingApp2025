@@ -1,0 +1,23 @@
+meta {
+  name: Get Users with gender
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/members?gender=female
+  body: none
+  auth: inherit
+}
+
+params:query {
+  gender: female
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+settings {
+  encodeUrl: true
+}
