@@ -217,6 +217,15 @@
             },
             "x-position": 2
           },
+           {
+            "name": "MaxAge",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          },
           {
             "name": "PageNumber",
             "in": "query",
@@ -224,7 +233,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 1
+            "x-position": 5
           },
           {
             "name": "PageSize",
@@ -233,7 +242,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 2
+            "x-position": 6
           }
         ],
         "responses": {
