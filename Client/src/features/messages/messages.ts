@@ -3,10 +3,11 @@ import { MessagesService } from '../../core/services/messages-service';
 import { Message } from '../../types/message';
 import { PaginationResult } from '../../types/paginationMetadata';
 import { Paginator } from "../../shared/paginator/paginator";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-messages',
-  imports: [Paginator],
+  imports: [Paginator, RouterLink],
   templateUrl: './messages.html',
   styleUrl: './messages.css'
 })

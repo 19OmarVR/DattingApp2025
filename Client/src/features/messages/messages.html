@@ -25,20 +25,31 @@
 </div>
 
 <div class="overflow-x-auto mt-3">
-  <table class="table bg-base-100">
+  <table class="table bg-base-100 table-fixed w-full">
     <thead>
       <tr>
-        <th>Sender/Recipient</th>
-        <th>Message</th>
-        <th>Date</th>
+        <th class="w-2/8">Sender/Recipient</th>
+        <th class="w-4/8">Message</th>
+        <th class="w-2/8">Date</th>
       </tr>
     </thead>
     <tbody>
       @for (message of paginatedMessages()?.items; track message.id) {
-        <tr>
-          <th>{{isInbox ? message.senderDisplayName : message.recipientDisplayName}}</th>
-          <td>{{message.content}}</td>
-          <td>{{message.messageSent}}</td>
+        <tr
+          [class.font-bold]="isInbox && !message.dateRead"
+          routerLink="/members/{{isInbox ? message.senderId : message.recipientId}}"
+          class="hover:bg-base-300 cursor-pointer"
+        >
+          <td class="w-2/8">
+            <div class="flex items-center gap-3">
+              <div class="h-12 w-12">
+                <img class="rounded-full" src="{{isInbox ? message.senderImageUrl : message.recipientImageUrl}}" alt="member">
+              </div>
+              <div>{{isInbox ? message.senderDisplayName : message.recipientDisplayName}}</div>
+            </div>
+          </td>
+          <td class="truncate w-4/8">{{message.content}}</td>
+          <td class="w-2/8">{{message.messageSent}}</td>
         </tr>
       }
     </tbody>
