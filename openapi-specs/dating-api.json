@@ -15,11 +15,6 @@
     },
     "version": "v1"
   },
-  "servers": [
-    {
-      "url": "https://localhost:5001"
-    }
-  ],
   "paths": {
     "/api/Account/register": {
       "post": {
@@ -296,7 +291,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginationResultOfMember"
-                  }
                 }
               }
             }
@@ -371,7 +365,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 6
+            "x-position": 7
           }
         ],
         "responses": {
@@ -384,6 +378,37 @@
                   "items": {
                     "$ref": "#/components/schemas/Member"
                   }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "Members_UpdateMember",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberUpdateRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -449,6 +474,157 @@
                   "items": {
                     "$ref": "#/components/schemas/Photo"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Members/photo": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "Members_AddPhoto",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "ContentType": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "ContentDisposition": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "Headers": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {}
+                  },
+                  "Length": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "Name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "FileName": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Photo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Members/photo/{photoId}": {
+      "put": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "Members_SetMainPhoto",
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "Members_DeletePhoto",
+        "parameters": [
+          {
+            "name": "photoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Messages": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_CreateMessage",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               }
             }
@@ -661,6 +837,81 @@
             "nullable": true
           },
           "memberId": {
+            "type": "string"
+          }
+        }
+      },
+      "MemberUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "senderDisplayName": {
+            "type": "string"
+          },
+          "senderImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "recipientId": {
+            "type": "string"
+          },
+          "recipientDisplayName": {
+            "type": "string"
+          },
+          "recipientImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "content": {
+            "type": "string"
+          },
+          "dateRead": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "messageSent": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MessageRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "recipientId": {
+            "type": "string"
+          },
+          "content": {
             "type": "string"
           }
         }
