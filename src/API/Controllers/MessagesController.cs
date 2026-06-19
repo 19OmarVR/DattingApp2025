@@ -42,7 +42,7 @@ public class MessagesController(
 
     [HttpGet]
     public async Task<ActionResult<PaginationResult<MessageResponse>>> GetMessagesByContainer(
-        [FromBody] MessageParams messageParams)
+        [FromQuery] MessageParams messageParams)
     {
         messageParams.MemberId = User.GetMemberId();
 

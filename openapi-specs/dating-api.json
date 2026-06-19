@@ -600,40 +600,6 @@
         }
       }
     },
-    "/api/Messages/thread/{recipientId}": {
-      "get": {
-        "tags": [
-          "Messages"
-        ],
-        "operationId": "Messages_GetThread",
-        "parameters": [
-          {
-            "name": "recipientId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessageResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Messages": {
       "post": {
         "tags": [
@@ -670,18 +636,43 @@
           "Messages"
         ],
         "operationId": "Messages_GetMessagesByContainer",
-        "requestBody": {
-          "x-name": "messageParams",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MessageParams"
-              }
-            }
+        "parameters": [
+          {
+            "name": "MemberId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
           },
-          "required": true,
-          "x-position": 1
-        },
+          {
+            "name": "Container",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ContainerTypes"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -689,6 +680,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginationResultOfMessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Messages/thread/{recipientId}": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_GetThread",
+        "parameters": [
+          {
+            "name": "recipientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageResponse"
+                  }
                 }
               }
             }
@@ -995,29 +1020,6 @@
           }
         }
       },
-      "MessageParams": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/PaginationRequest"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "container"
-            ],
-            "properties": {
-              "memberId": {
-                "type": "string",
-                "nullable": true
-              },
-              "container": {
-                "$ref": "#/components/schemas/ContainerTypes"
-              }
-            }
-          }
-        ]
-      },
       "ContainerTypes": {
         "type": "string",
         "description": "",
@@ -1029,20 +1031,6 @@
           "Inbox",
           "Outbox"
         ]
-      },
-      "PaginationRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
       }
     }
   }
