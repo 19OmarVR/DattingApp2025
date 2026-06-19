@@ -720,6 +720,38 @@
           }
         }
       }
+    },
+    "/api/Messages/{id}": {
+      "delete": {
+        "tags": [
+          "Messages"
+        ],
+        "operationId": "Messages_DeleteMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
