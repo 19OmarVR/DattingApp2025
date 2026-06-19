@@ -20,4 +20,8 @@ export class MessagesService {
 
     return this.http.get<PaginationResult<Message>>(this.baseUrl + 'messages', {params});
   }
+
+  getMessageThread(memberId: string) {
+    return this.http.get<Message[]>(this.baseUrl + 'messages/thread/' + memberId);
+  }
 }
