@@ -1,50 +1,41 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { MessagesService } from '../../core/services/messages-service';
-import { MembersService } from '../../core/services/members-service';
-import { Message } from '../../types/message';
-import { DatePipe } from '@angular/common';
-import { TimeAgoPipe } from '../../core/pipes/time-ago-pipe';
-import { FormsModule } from '@angular/forms';
-
-@Component({
-  selector: 'app-member-messages',
-  imports: [DatePipe, TimeAgoPipe, FormsModule],
-  templateUrl: './member-messages.html',
-  styleUrl: './member-messages.css'
-})
-export class MemberMessages implements OnInit {
-  private messagesService = inject(MessagesService);
-  private membersService = inject(MembersService);
-  protected messages = signal<Message[]>([]);
-  protected messageContent = '';
-
-  ngOnInit(): void {
-    this.loadMessages();
-  }
-
-  loadMessages() {
-    const memberId = this.membersService.member()?.id;
-    if (memberId) {
-      this.messagesService.getMessageThread(memberId).subscribe({
-        next: messages => this.messages.set(messages.map(message => ({
-          ...message,
-          currentUserSender: message.senderId !== memberId
-        })))
-      })
+<div class="flex flex-col w-full h-[70vh]">
+  <div class="flex flex-col flex-grow overflow-auto">
+    @for (message of messages(); track message.id) {
+      <div
+        class="chat"
+        [class.chat-start]="!message.currentUserSender"
+        [class.chat-end]="message.currentUserSender"
+        >
+        <div class="chat-image avatar">
+          <div class="w-10 rounded-full">
+            <img
+              alt="User image"
+              [src]="message.senderImageUrl"
+            />
+          </div>
+        </div>
+        <div class="chat-header">
+          {{message.senderDisplayName}}
+          <time class="text-xs opacity-50">{{message.messageSent | date: 'short'}}</time>
+        </div>
+        <div class="chat-bubble">{{message.content}}</div>
+        @if (message.currentUserSender && message.dateRead) {
+          <div class="chat-footer opacity-50">Seen {{message.dateRead | timeAgo}}</div>
+        } @else if (message.currentUserSender && !message.dateRead) {
+          <div class="chat-footer opacity-50">Not read</div>
+        } @else {
+          <div class="chat-footer opacity-50">Delivered</div>
+        }
+      </div>
     }
-  }
+    <div #messageEndRef></div>
+  </div>
 
-  sendMessage() {
-    const recipientId = this.membersService.member()?.id;
-    if (!recipientId) return;
-    this.messagesService.sendMessage(recipientId, this.messageContent).subscribe({
-      next: message => {
-        this.messages.update(messages => {
-          message.currentUserSender = true;
-          return [...messages, message];
-        });
-        this.messageContent = '';
-      }
-    })
-  }
-}
+  <div class="flex join w-full">
+    <input [(ngModel)]="messageContent" class="input w-full" placeholder="Type a message to send..."
+      (keydown.enter)="sendMessage()">
+    <button (click)="sendMessage()" type="submit" class="btn btn-primary join-item">Send</button>
+  </div>
+
+
+</div>
