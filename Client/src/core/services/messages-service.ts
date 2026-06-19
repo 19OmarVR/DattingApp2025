@@ -30,6 +30,6 @@ export class MessagesService {
   }
 
   deleteMessage(id: string) {
-    return this.http.delete(this.baseUrl + ' messages/' + id);
+    return this.http.delete(this.baseUrl + 'messages/' + id);
   }
 }
