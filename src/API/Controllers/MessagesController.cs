@@ -1,7 +1,6 @@
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
-using API.Helpers;
 using API.Interfaces;
 using API.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -38,42 +37,5 @@ public class MessagesController(
         }
 
         return BadRequest("Failed to send the message");
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<PaginationResult<MessageResponse>>> GetMessagesByContainer(
-        [FromQuery] MessageParams messageParams)
-    {
-        messageParams.MemberId = User.GetMemberId();
-
-        return await messagesRepository.GetForMemberAsync(messageParams);
-    }
-
-    [HttpGet("thread/{recipientId}")]
-    public async Task<ActionResult<IReadOnlyList<MessageResponse>>> GetThread(string recipientId)
-    {
-        return Ok(await messagesRepository.GetThreadAsync(User.GetMemberId(), recipientId));
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteMessage(string id)
-    {
-        var memberId = User.GetMemberId();
-        var message = await messagesRepository.GetAsync(id);
-
-        if (message == null) return BadRequest("Cannot delete the message");
-        if (message.SenderId != memberId && message.RecipientId != memberId)
-            return BadRequest("You cannot access such message");
-
-        if (message.SenderId == memberId) message.SenderDeleted = true;
-        if (message.RecipientId == memberId) message.RecipientDeleted = true;
-        if (message is { SenderDeleted: true, RecipientDeleted: true })
-        {
-            messagesRepository.Delete(message);
-        }
-
-        if (await messagesRepository.SaveAllAsync()) return Ok();
-
-        return BadRequest("There was a problem while deleting the message");
     }
 }

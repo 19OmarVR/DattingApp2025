@@ -15,12 +15,12 @@ public class MessagesRepository(AppDbContext context) : IMessagesRepository
 
     public async Task<PaginationResult<MessageResponse>> GetForMember()
     {
-        
+        throw new NotImplementedException();
     }
 
     public async Task<IReadOnlyList<MessageResponse>> GetThread(string currentMemberId, string recipientId)
     {
-        
+        throw new NotImplementedException();
     }
 
     public async Task<bool> SaveAllAsync() => await context.SaveChangesAsync() > 0;
