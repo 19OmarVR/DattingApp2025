@@ -46,7 +46,6 @@ namespace API.Data.Migrations
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 
-
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
@@ -246,21 +245,21 @@ namespace API.Data.Migrations
                         new
                         {
                             Id = "member-id",
-                            ConcurrencyStamp = "614141aa-6201-4b34-a88d-c3a5cb398242",
+                            ConcurrencyStamp = "7a6818dc-6840-4deb-ad4d-dbebf52f6ddd",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
                             Id = "moderator-id",
-                            ConcurrencyStamp = "dfcfa935-bba2-495c-8fcb-ae6c673f797c",
+                            ConcurrencyStamp = "4fe9abb1-d7c7-46fb-89a7-921c901240dd",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         },
                         new
                         {
                             Id = "admin-id",
-                            ConcurrencyStamp = "8ada9622-e2d1-43a7-b766-0bea5b0af243",
+                            ConcurrencyStamp = "4ce0edbd-e3a4-49be-9572-58d6b23da8c7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
