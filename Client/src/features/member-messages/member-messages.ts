@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { MessagesService } from '../../core/services/messages-service';
 import { MembersService } from '../../core/services/members-service';
 import { Message } from '../../types/message';
@@ -14,12 +14,11 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './member-messages.html',
   styleUrl: './member-messages.css'
 })
-export class MemberMessages implements OnInit {
+export class MemberMessages implements OnInit, OnDestroy {
   @ViewChild('messageEndRef') messageEndRef!: ElementRef;
   protected messagesService = inject(MessagesService);
   private membersService = inject(MembersService);
   private router = inject(ActivatedRoute);
-
   protected messageContent = '';
   protected presenceService = inject(PresenceService);
 
@@ -42,30 +41,12 @@ export class MemberMessages implements OnInit {
     })
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
   sendMessage() {
     const recipientId = this.membersService.member()?.id;
     if (!recipientId) return;
     this.messagesService.sendMessage(recipientId, this.messageContent)?.then(() => {
       this.messageContent = '';
     });
-
-
-
-
-
-
   }
 
   scrollToBottom() {
@@ -74,5 +55,9 @@ export class MemberMessages implements OnInit {
         this.messageEndRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.messagesService.stopHubConnection();
   }
 }
