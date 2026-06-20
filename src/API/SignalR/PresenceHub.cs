@@ -1,4 +1,4 @@
-using System.Security.Claims;
+using API.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -24,7 +24,7 @@ public class PresenceHub(PresenceTracker presenceTracker) : Hub
 
     private string GetUserId()
     {
-        return Context.User?.FindFirstValue(ClaimTypes.Email) ?? throw new HubException("Cannot get member id");
+        return Context.User?.GetMemberId() ?? throw new HubException("Cannot get member id");
     }
 
     private async Task GetOnlineUsers()

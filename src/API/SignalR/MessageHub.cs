@@ -1,7 +1,6 @@
-using System.Security.Claims;
-
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
 using API.Mappers;
 using Microsoft.AspNetCore.Authorization;
@@ -55,7 +54,6 @@ public class MessageHub(IMessagesRepository messagesRepository,
         if (await messagesRepository.SaveAllAsync())
         {
             await Clients.Group(groupName).SendAsync("NewMessage", message.ToResponse());
-
         }
     }
 
@@ -89,6 +87,6 @@ public class MessageHub(IMessagesRepository messagesRepository,
 
     private string GetUserId()
     {
-        return Context.User?.FindFirstValue(ClaimTypes.Email) ?? throw new HubException("Cannot get member id");
+        return Context.User?.GetMemberId() ?? throw new HubException("Cannot get member id");
     }
 }
