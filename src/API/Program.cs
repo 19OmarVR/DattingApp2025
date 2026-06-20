@@ -7,6 +7,7 @@ using API.Helpers;
 using API.Interfaces;
 using API.Middlewares;
 using API.Services;
+using API.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +83,7 @@ public static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+        app.MapHub<PresenceHub>("hubs/presence");
         app.Run();
     }
 
@@ -126,6 +128,7 @@ public static class Program
         // Other settings
         builder.Services.AddScoped<UserActivityLogger>();
         builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+        builder.Services.AddSignalR();
     }
 
     private static void AddOpenApiDocument(WebApplicationBuilder builder)
