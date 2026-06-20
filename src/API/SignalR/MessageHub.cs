@@ -20,7 +20,7 @@ public class MessageHub(IMessagesRepository messagesRepository,
         var groupName = GetGroupName(GetUserId(), otherUser);
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-        var messages = await messagesRepository.GetThread(GetUserId(), otherUser);
+        var messages = await messagesRepository.GetThreadAsync(GetUserId(), otherUser);
         await Clients.Group(groupName).SendAsync("ReceivedMessageThread", messages);
     }
 
