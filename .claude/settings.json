@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep -l \"public static.*GetMemberId\")",
+      "PowerShell($dotnetPath = \\(Get-Command dotnet -ErrorAction SilentlyContinue\\).Source; if \\(-not $dotnetPath\\) { Get-ChildItem \"C:\\\\Program Files\\\\dotnet\\\\dotnet.exe\" -ErrorAction SilentlyContinue; Get-ChildItem \"$env:LOCALAPPDATA\\\\Microsoft\\\\dotnet\\\\dotnet.exe\" -ErrorAction SilentlyContinue }; Write-Host \"PATH: $env:PATH\")",
+      "Read(//c/Program Files/dotnet/**)"
+    ]
+  }
+}

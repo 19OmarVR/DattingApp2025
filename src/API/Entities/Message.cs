@@ -14,4 +14,5 @@ public class Message
     // Navigation properties
     public Member Sender { get; set; } = null!;
     public Member Recipient { get; set; } = null!;
+
 }

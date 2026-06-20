@@ -46,7 +46,7 @@ public class MessagesController(
     {
         messageParams.MemberId = User.GetMemberId();
 
-        return await messagesRepository.GetForMemberAsync(messageParams);
+        return await messagesRepository.GetForMember(messageParams);
     }
 
     [HttpGet("thread/{recipientId}")]
@@ -58,22 +58,22 @@ public class MessagesController(
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteMessage(string id)
     {
-        var memberId = User.GetMemberId();
-        var message = await messagesRepository.GetAsync(id);
+        var currentMemberId = User.GetMemberId();
+        var message = await messagesRepository.Get(id);
 
-        if (message == null) return BadRequest("Cannot delete the message");
-        if (message.SenderId != memberId && message.RecipientId != memberId)
-            return BadRequest("You cannot access such message");
+        if (message == null) return NotFound();
 
-        if (message.SenderId == memberId) message.SenderDeleted = true;
-        if (message.RecipientId == memberId) message.RecipientDeleted = true;
+        if (message.SenderId != currentMemberId && message.RecipientId != currentMemberId)
+            return Forbid();
+
+        if (message.SenderId == currentMemberId) message.SenderDeleted = true;
+        if (message.RecipientId == currentMemberId) message.RecipientDeleted = true;
+
         if (message is { SenderDeleted: true, RecipientDeleted: true })
-        {
             messagesRepository.Delete(message);
-        }
 
         if (await messagesRepository.SaveAllAsync()) return Ok();
 
-        return BadRequest("There was a problem while deleting the message");
+        return BadRequest("Problem deleting the message");
     }
 }
