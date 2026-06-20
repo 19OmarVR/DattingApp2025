@@ -1,64 +1,75 @@
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using API.DTOs;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace API.Data
+namespace API.Data;
+
+public class Seed
 {
-    public class Seed
+    public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
-        public static async Task SeedUsers(AppDbContext context)
+        if (await userManager.Users.AnyAsync()) return;
+
+        var seedUsersData = await File.ReadAllTextAsync("Data/UserSeedData.json");
+        var seedUsers = JsonSerializer.Deserialize<List<SeedUserDto>>(seedUsersData);
+
+        if (seedUsers == null)
         {
-            if (await context.Users.AnyAsync()) return;
+            Console.WriteLine("No seed data available");
+            return;
+        }
 
-            var seedUsersData = await File.ReadAllTextAsync("Data/UserSeedData.json");
-            var seedUsers = JsonSerializer.Deserialize<List<SeedUserDto>>(seedUsersData);
+        foreach (var seedUser in seedUsers)
+        {
 
-            if (seedUsers == null)
+            var user = new AppUser
             {
-                Console.WriteLine("No seed data available");
-                return;
-            }
-
-            foreach (var seedUser in seedUsers)
-            {
-                using var hmac = new HMACSHA512();
-                var user = new AppUser
+                Id = seedUser.Id,
+                Email = seedUser.Email,
+                UserName = seedUser.Email,
+                DisplayName = seedUser.DisplayName,
+                ImageUrl = seedUser.ImageUrl,
+                Member = new Member
                 {
                     Id = seedUser.Id,
-                    Email = seedUser.Email,
                     DisplayName = seedUser.DisplayName,
+                    Gender = seedUser.Gender,
+                    City = seedUser.City,
+                    Country = seedUser.Country,
+                    Description = seedUser.Description,
+                    BirthDay = seedUser.BirthDay,
                     ImageUrl = seedUser.ImageUrl,
-                    PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("password")),
-                    PasswordSalt = hmac.Key,
-                    Member = new Member
-                    {
-                        Id = seedUser.Id,
-                        DisplayName = seedUser.DisplayName,
-                        Gender = seedUser.Gender,
-                        City = seedUser.City,
-                        Country = seedUser.Country,
-                        Description = seedUser.Description,
-                        BirthDay = seedUser.BirthDay,
-                        ImageUrl = seedUser.ImageUrl,
-                        LastActive = seedUser.LastActive,
-                        Created = seedUser.Created
-                    }
-                };
+                    LastActive = seedUser.LastActive,
+                    Created = seedUser.Created
+                }
+            };
 
-                user.Member.Photos.Add(new Photo
-                {
-                    Url = seedUser.ImageUrl!,
-                    MemberId = seedUser.Id
-                });
+            user.Member.Photos.Add(new Photo
+            {
+                Url = seedUser.ImageUrl!,
+                MemberId = seedUser.Id
+            });
 
-                context.Users.Add(user);
+            var result = await userManager.CreateAsync(user, "Pa$$w0rd");
+            if (!result.Succeeded)
+            {
+                Console.WriteLine(result.Errors.First().Description);
             }
-
-            await context.SaveChangesAsync();
+            await userManager.AddToRoleAsync(user, "Member");
         }
+
+        var admin = new AppUser
+        {
+            UserName = "admin@test.com",
+            Email = "admin@test.com",
+            DisplayName = "Admin"
+        };
+
+
+        await userManager.CreateAsync(admin, "Pa$$w0rd");
+        await userManager.AddToRolesAsync(admin, ["Admin", "Moderator"]);
     }
 }

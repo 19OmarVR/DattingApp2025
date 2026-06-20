@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -8,9 +9,9 @@ public class ErrorController : BaseApiController
     [HttpGet("bad-request")]
     public IActionResult GetBadRequest() // 400
     {
-        //var inputParam = -1;
-        //if (inputParam <= 0) throw new ArgumentOutOfRangeException(nameof(inputParam));
-        
+        // var inputParam = -1;
+        // if (inputParam <= 0) throw new ArgumentOutOfRangeException(nameof(inputParam));
+
         return BadRequest("Bad request");
     }
 
@@ -32,4 +33,10 @@ public class ErrorController : BaseApiController
         throw new Exception("Server error");
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin-secret")]
+    public ActionResult<string> GetSecretAdmin()
+    {
+        return Ok("Only admins can see this");
+    }
 }

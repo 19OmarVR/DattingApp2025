@@ -1,37 +1,49 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using API.Entities;
 using API.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services;
 
-public class TokenServices(IConfiguration configuration) : ITokenService
+public class TokenService(IConfiguration configuration, UserManager<AppUser> userManager) : ITokenService
 {
-    public string CreateToken(AppUser user)
+    public async Task<string> CreateToken(AppUser user)
     {
-        var tokenkey = configuration["TokenKey"] ?? throw new ArgumentException("Cannot get the token key");
-        if (tokenkey.Length < 64)
+        var tokenKey = configuration["TokenKey"] ?? throw new ArgumentNullException("Cannot get the token key");
+        if (tokenKey.Length < 64)
         {
-            throw new Exception("Token key must be at least 64 characters long");
+            throw new ArgumentException("The token key must be >= 64 chars");
         }
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenkey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Email, user.Email!),
             new(ClaimTypes.NameIdentifier, user.Id)
         };
+
+        var roles = await userManager.GetRolesAsync(user);
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-        var tokenDescriptor = new SecurityTokenDescriptor
+        var tokenDescription = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddDays(7),
+            Expires = DateTime.UtcNow.AddMinutes(7),
             SigningCredentials = creds
         };
         var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var token = tokenHandler.CreateToken(tokenDescription);
+
         return tokenHandler.WriteToken(token);
     }
+
+    public string GenerateRefreshToken()
+    {
+        var randomBytes = RandomNumberGenerator.GetBytes(64);
+        return Convert.ToBase64String(randomBytes);
+    }
 }
-        

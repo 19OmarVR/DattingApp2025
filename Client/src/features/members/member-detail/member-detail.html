@@ -1,12 +1,15 @@
-@if (member(); as member) {
+@if (membersService.member(); as member) {
 <div class="flex gap-6">
   <div class="card bg-base-100 flex flex-col h-[85vh] w-1/4">
     <img class="rounded-full mx-10 mt-3 object-cover" src="{{member.imageUrl || './user.jpg'}}"
       alt="{{member.displayName}}">
     <div class="card-body">
       <div class="flex flex-col items-center">
-        <div class="flex text-2xl text-primary">
+        <div class="flex text-2xl text-primary items-center">
           {{member.displayName}}, {{member.birthDay | age}}
+          @if (presenceService.onlineUsers().includes(member.id)) {
+            <span class="status status-success status-xl ml-3"></span>
+          }
         </div>
         <div class="text-5m">
           {{member.city}}, {{member.country}}
@@ -26,7 +29,16 @@
   </div>
 
   <div class="card bg-base-100 w-3/4 p-6">
-    <h3 class="card-title text-3xl text-primary">{{title()}}</h3>
+    <div class="flex justify-between items-center">
+      <h3 class="card-title text-3xl text-primary">{{title()}}</h3>
+      @if (isCurrentUser()) {
+        <button
+          (click)="membersService.editMode.set(!membersService.editMode())"
+          class="btn btn-outline btn-primary">
+          {{membersService.editMode() ? 'Cancel' : 'Edit'}}
+        </button>
+      }
+    </div>
     <div class="divider"></div>
     <div>
       <router-outlet></router-outlet>
