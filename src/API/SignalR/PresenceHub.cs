@@ -5,17 +5,31 @@ using Microsoft.AspNetCore.SignalR;
 namespace API.SignalR;
 
 [Authorize]
-public class PresenceHub : Hub
+public class PresenceHub(PresenceTracker presenceTracker) : Hub
 {
     public override async Task OnConnectedAsync()
     {
-        await Clients.Others.SendAsync("UserOnline", Context.User?.FindFirstValue(ClaimTypes.Email));
+        await presenceTracker.UserConnected(GetUserId(), Context.ConnectionId);
+        await Clients.Others.SendAsync("UserOnline", GetUserId());
+        await GetOnlineUsers();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        await Clients.Others.SendAsync("UserOffline", Context.User?.FindFirstValue(ClaimTypes.Email));
-        
+        await presenceTracker.UserDisconnected(GetUserId(), Context.ConnectionId);
+        await Clients.Others.SendAsync("UserOffline", GetUserId());
+        await GetOnlineUsers();
         await base.OnDisconnectedAsync(exception);
+    }
+
+    private string GetUserId()
+    {
+        return Context.User?.FindFirstValue(ClaimTypes.Email) ?? throw new HubException("Cannot get member id");
+    }
+
+    private async Task GetOnlineUsers()
+    {
+        var currentUsers = await presenceTracker.GetOnlineUsers();
+        await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
     }
 }
