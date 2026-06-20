@@ -4,61 +4,60 @@ using System.Text.Json;
 using API.DTOs;
 using API.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace API.Data
+namespace API.Data;
+
+public class Seed
 {
-    public class Seed
+    public static async Task SeedUsers(AppDbContext context)
     {
-        public static async Task SeedUsers(AppDbContext context)
+        if (await context.Users.AnyAsync()) return;
+
+        var seedUsersData = await File.ReadAllTextAsync("Data/UserSeedData.json");
+        var seedUsers = JsonSerializer.Deserialize<List<SeedUserDto>>(seedUsersData);
+
+        if (seedUsers == null)
         {
-            if (await context.Users.AnyAsync()) return;
+            Console.WriteLine("No seed data available");
+            return;
+        }
 
-            var seedUsersData = await File.ReadAllTextAsync("Data/UserSeedData.json");
-            var seedUsers = JsonSerializer.Deserialize<List<SeedUserDto>>(seedUsersData);
-
-            if (seedUsers == null)
+        foreach (var seedUser in seedUsers)
+        {
+            using var hmac = new HMACSHA512();
+            var user = new AppUser
             {
-                Console.WriteLine("No seed data available");
-                return;
-            }
+                Id = seedUser.Id,
+                Email = seedUser.Email,
+                UserName = seedUser.Email,
+                DisplayName = seedUser.DisplayName,
+                ImageUrl = seedUser.ImageUrl,
 
-            foreach (var seedUser in seedUsers)
-            {
-                using var hmac = new HMACSHA512();
-                var user = new AppUser
+
+                Member = new Member
                 {
                     Id = seedUser.Id,
-                    Email = seedUser.Email,
                     DisplayName = seedUser.DisplayName,
+                    Gender = seedUser.Gender,
+                    City = seedUser.City,
+                    Country = seedUser.Country,
+                    Description = seedUser.Description,
+                    BirthDay = seedUser.BirthDay,
                     ImageUrl = seedUser.ImageUrl,
-                    PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("password")),
-                    PasswordSalt = hmac.Key,
-                    Member = new Member
-                    {
-                        Id = seedUser.Id,
-                        DisplayName = seedUser.DisplayName,
-                        Gender = seedUser.Gender,
-                        City = seedUser.City,
-                        Country = seedUser.Country,
-                        Description = seedUser.Description,
-                        BirthDay = seedUser.BirthDay,
-                        ImageUrl = seedUser.ImageUrl,
-                        LastActive = seedUser.LastActive,
-                        Created = seedUser.Created
-                    }
-                };
+                    LastActive = seedUser.LastActive,
+                    Created = seedUser.Created
+                }
+            };
 
-                user.Member.Photos.Add(new Photo
-                {
-                    Url = seedUser.ImageUrl!,
-                    MemberId = seedUser.Id
-                });
+            user.Member.Photos.Add(new Photo
+            {
+                Url = seedUser.ImageUrl!,
+                MemberId = seedUser.Id
+            });
 
-                context.Users.Add(user);
-            }
-
-            await context.SaveChangesAsync();
+            context.Users.Add(user);
         }
+
+        await context.SaveChangesAsync();
     }
 }
