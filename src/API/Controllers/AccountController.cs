@@ -39,8 +39,6 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
     [HttpPost("register")]
     public async Task<ActionResult<UserResponse>> Register(RegisterRequest request)
     {
-
-
         var user = new AppUser
         {
             DisplayName = request.DisplayName,
@@ -55,7 +53,7 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
                 BirthDay = request.BirthDay
             }
         };
-        
+
         var result = await userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
@@ -68,7 +66,7 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
             return ValidationProblem();
         }
 
-        return user.ToDto(tokenService);
+        return await user.ToDto(tokenService);
     }
 
     /// <summary>
@@ -89,9 +87,8 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
 
         var result = await userManager.CheckPasswordAsync(user, request.Password);
 
-
         if (!result) return Unauthorized("Invalid username or password");
 
-        return user.ToDto(tokenService);
+        return await user.ToDto(tokenService);
     }
 }
