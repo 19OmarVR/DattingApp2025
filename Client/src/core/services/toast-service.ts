@@ -9,11 +9,11 @@ export class ToastService {
     this.createToastContainer();
   }
 
-  private createToastContainer(){
-    if(!document.getElementById('toast-container')){
-      const container = document.createElement('div');
-      container.id = 'toast-container';
-      container.className = 'toast toast-bottom toast-end';
+  private createToastContainer(): void {
+    if (!document.getElementById("toast-container")) {
+      const container = document.createElement("div");
+      container.id = "toast-container";
+      container.className = "toast toast-bottom toast-end z-50";
       document.body.appendChild(container);
     }
   }
@@ -55,5 +55,4 @@ export class ToastService {
   info(message: string, duration?: number): void {
     this.createToastElement(message, "alert-info", duration);
   }
-
 }

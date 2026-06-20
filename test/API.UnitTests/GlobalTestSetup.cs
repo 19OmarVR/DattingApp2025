@@ -1,6 +1,5 @@
 using API.Data;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
 
 namespace API.UnitTests;
 
@@ -18,12 +17,12 @@ public class GlobalTestSetup
 
         AppDbContext = new AppDbContext(options);
         await AppDbContext.Database.MigrateAsync();
+        await Seed.SeedUsers(AppDbContext);
     }
 
     [OneTimeTearDown]
     public async Task TearDown()
     {
         await AppDbContext.DisposeAsync();
-        await Seed.SeedUsers(AppDbContext);
     }
 }

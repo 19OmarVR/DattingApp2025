@@ -28,7 +28,10 @@
         "@schematics/angular:resolver": {
           "skipTests": false,
           "path": "src"
-
+          },
+        "@schematics/angular:directive": {
+          "skipTests": false,
+          "path": "src/shared/directives"
         },
         "@schematics/angular:pipe": {
           "skipTests": false,
