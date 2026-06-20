@@ -1,17 +1,17 @@
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using API.DTOs;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
 public class Seed
 {
-    public static async Task SeedUsers(AppDbContext context)
+    public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
-        if (await context.Users.AnyAsync()) return;
+        if (await userManager.Users.AnyAsync()) return;
 
         var seedUsersData = await File.ReadAllTextAsync("Data/UserSeedData.json");
         var seedUsers = JsonSerializer.Deserialize<List<SeedUserDto>>(seedUsersData);
@@ -24,7 +24,7 @@ public class Seed
 
         foreach (var seedUser in seedUsers)
         {
-            using var hmac = new HMACSHA512();
+
             var user = new AppUser
             {
                 Id = seedUser.Id,
@@ -32,8 +32,6 @@ public class Seed
                 UserName = seedUser.Email,
                 DisplayName = seedUser.DisplayName,
                 ImageUrl = seedUser.ImageUrl,
-
-
                 Member = new Member
                 {
                     Id = seedUser.Id,
@@ -55,9 +53,23 @@ public class Seed
                 MemberId = seedUser.Id
             });
 
-            context.Users.Add(user);
+            var result = await userManager.CreateAsync(user, "Pa$$w0rd");
+            if (!result.Succeeded)
+            {
+                Console.WriteLine(result.Errors.First().Description);
+            }
+            await userManager.AddToRoleAsync(user, "Member");
         }
 
-        await context.SaveChangesAsync();
+        var admin = new AppUser
+        {
+            UserName = "admin@test.com",
+            Email = "admin@test.com",
+            DisplayName = "Admin"
+        };
+
+
+        await userManager.CreateAsync(admin, "Pa$$w0rd");
+        await userManager.AddToRolesAsync(admin, ["Admin", "Moderator"]);
     }
 }
