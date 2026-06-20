@@ -103,6 +103,26 @@
         }
       }
     },
+    "/api/Account/token": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_RefreshToken",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Admin/users-with-roles": {
       "get": {
         "tags": [
