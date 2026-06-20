@@ -42,7 +42,7 @@ public class MessagesController(
 
     [HttpGet]
     public async Task<ActionResult<PaginationResult<MessageResponse>>> GetMessagesByContainer(
-        [FromBody] MessageParams messageParams)
+        [FromQuery] MessageParams messageParams)
     {
         messageParams.MemberId = User.GetMemberId();
 
@@ -52,6 +52,28 @@ public class MessagesController(
     [HttpGet("thread/{recipientId}")]
     public async Task<ActionResult<IReadOnlyList<MessageResponse>>> GetThread(string recipientId)
     {
-        return Ok(await messagesRepository.GetThread(User.GetMemberId(), recipientId));
+        return Ok(await messagesRepository.GetThreadAsync(User.GetMemberId(), recipientId));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteMessage(string id)
+    {
+        var currentMemberId = User.GetMemberId();
+        var message = await messagesRepository.Get(id);
+
+        if (message == null) return NotFound();
+
+        if (message.SenderId != currentMemberId && message.RecipientId != currentMemberId)
+            return Forbid();
+
+        if (message.SenderId == currentMemberId) message.SenderDeleted = true;
+        if (message.RecipientId == currentMemberId) message.RecipientDeleted = true;
+
+        if (message is { SenderDeleted: true, RecipientDeleted: true })
+            messagesRepository.Delete(message);
+
+        if (await messagesRepository.SaveAllAsync()) return Ok();
+
+        return BadRequest("Problem deleting the message");
     }
 }
